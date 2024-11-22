@@ -1,36 +1,32 @@
-Crie uma DAG no Apache Airflow que execute o seguinte fluxo de trabalho:
+# Teste Python/ETL
+## Apache Airflow DAG: PostgreSQL to MongoDB Workflow
 
-Leitura de dados no PostgreSQL
+## Descrição
 
-Conecte-se ao banco de dados PostgreSQL e faça a leitura da tabela entrega.
-Extraia os campos id e data_entrega.
-Cálculo de diferença de tempo
+Este projeto implementa uma DAG no Apache Airflow para realizar o seguinte fluxo de trabalho:
 
-Para cada registro, calcule a diferença em minutos entre a data/hora atual e o campo data_entrega.
-Inserção no MongoDB
+1. **Leitura de Dados no PostgreSQL**  
+   Conecta-se ao banco de dados PostgreSQL e realiza a leitura da tabela `entrega`, extraindo os campos `id` e `data_entrega`.
 
-Insira os resultados em uma coleção chamada timeDiff no MongoDB.
+2. **Cálculo de Diferença de Tempo**  
+   Para cada registro, calcula a diferença em minutos entre a data/hora atual e o campo `data_entrega`.
 
-Adicione os seguintes campos ao documento:
-id_entrega: ID da entrega.
-data_entrega: Data de entrega original.
-time_diff: Diferença de tempo calculada (em minutos).
-cor: Uma classificação baseada no valor de time_diff, conforme as regras abaixo:
-Se time_diff > 50: "vermelho".
-Se 30 <= time_diff <= 50: "amarelo".
-Se time_diff < 30: "verde".
+3. **Inserção no MongoDB**  
+   Insere os resultados em uma coleção chamada `timeDiff` no MongoDB, adicionando os seguintes campos ao documento:
+   - `id_entrega`: ID da entrega.
+   - `data_entrega`: Data de entrega original.
+   - `time_diff`: Diferença de tempo calculada (em minutos).
+   - `cor`: Classificação baseada no valor de `time_diff`:
+     - **`vermelho`**: Se `time_diff > 50`.
+     - **`amarelo`**: Se `30 <= time_diff <= 50`.
+     - **`verde`**: Se `time_diff < 30`.
 
+## Exemplo de Documento no MongoDB
 
-Exemplo de documento esperado no MongoDB:
-
+```json
 {
   "id_entrega": 1,
   "data_entrega": "2024-11-21T12:00:00",
   "time_diff": 45.0,
   "cor": "amarelo"
 }
-
-Certifique-se de implementar conexões seguras para os bancos de dados e de tratar possíveis erros, 
-como falhas de conexão ou dados inconsistentes.
-
-A DAG deve ser configurada para ser executada periodicamente, conforme a necessidade.
